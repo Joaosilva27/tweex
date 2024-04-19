@@ -1,31 +1,35 @@
 import { useEffect, useState } from "react";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import { collection, addDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import firebase from "firebase/compat/app";
 
 const WriteTweexContainer = () => {
   const [tweex, setTweex] = useState("");
   const [tweexes, setTweexes] = useState([]);
 
+  // Fetching tweexes db for docs (tweex, user, email, profilePicture)
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const tweexesCollection = collection(db, "tweexes");
-        const tweexesSnapshot = await getDocs(tweexesCollection);
-
-        const fetchedTweexes = [];
-        tweexesSnapshot.forEach(doc => {
-          fetchedTweexes.push({ id: doc.id, ...doc.data() });
+        const tweexesCollection = collection(db, "tweexes").orderBy("timestamp");
+        const unsubscribe = onSnapshot(tweexesCollection, snapshot => {
+          const fetchedTweexes = [];
+          snapshot.forEach(doc => {
+            fetchedTweexes.push({ id: doc.id, ...doc.data() });
+          });
+          setTweexes(fetchedTweexes);
         });
 
-        setTweexes(fetchedTweexes);
+        return unsubscribe;
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchData();
-  }, [tweexes]);
+  }, []); // Fetch data only once when component mounts
 
+  // Adding info to the db when user makes a post
   const onHandleClick = async () => {
     try {
       const tweexPost = await addDoc(collection(db, "tweexes"), {
@@ -33,6 +37,7 @@ const WriteTweexContainer = () => {
         user: auth.currentUser.displayName,
         email: auth.currentUser.email,
         profilePicture: auth.currentUser.photoURL,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
 
       tweexPost();
@@ -43,14 +48,20 @@ const WriteTweexContainer = () => {
 
   return (
     <div>
-      <div>
-        <img />
-        <span>username</span>
-        <span>email</span>
-        <span>20 h</span>
-        <input className='text-black' onChange={e => setTweex(e.target.value)} value={tweex} />
-        <button value={tweex} onClick={onHandleClick}>
-          submit
+      <div className='flex justify-center items-center'>
+        <img className='w-8 h-8 rounded-full' src={auth.currentUser.photoURL} alt='User' />
+        <input
+          className=' w-full ml-3 appearance-none bg-transparent border-none focus:outline-none placeholder-white'
+          placeholder='いまどうしてる ?'
+          onChange={e => setTweex(e.target.value)}
+          value={tweex}
+        />
+        <button
+          className=' bg-slate-300 hover:bg-slate-200 text-gray-900  font-bold py-3 px-3 rounded-full whitespace-nowrap'
+          value={tweex}
+          onClick={onHandleClick}
+        >
+          トウィークス
         </button>
       </div>
       <div className='flex flex-col mt-10'>
@@ -58,7 +69,7 @@ const WriteTweexContainer = () => {
           {tweexes.map(tweex => (
             <div className='flex mb-6' key={tweex.id}>
               <div>
-                <img className='w-8 rounded-full' src={tweex.profilePicture} />
+                <img className='w-8 rounded-full' src={tweex.profilePicture} alt='Profile' />
               </div>
               <div className='ml-2'>
                 <span>{tweex.user}</span>
