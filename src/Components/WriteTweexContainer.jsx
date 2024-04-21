@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import firebase from "firebase/compat/app";
 
@@ -8,26 +8,25 @@ const WriteTweexContainer = () => {
   const [tweexes, setTweexes] = useState([]);
 
   // Fetching tweexes db for docs (tweex, user, email, profilePicture)
+  const fetchData = async () => {
+    try {
+      const tweexesCollection = collection(db, "tweexes");
+      const tweexesSnapshot = await getDocs(query(tweexesCollection, orderBy("createdAt")));
+
+      const fetchedTweexes = [];
+      tweexesSnapshot.forEach(doc => {
+        fetchedTweexes.push({ id: doc.id, ...doc.data() });
+      });
+      setTweexes(fetchedTweexes);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tweexesCollection = collection(db, "tweexes").orderBy("timestamp");
-        const unsubscribe = onSnapshot(tweexesCollection, snapshot => {
-          const fetchedTweexes = [];
-          snapshot.forEach(doc => {
-            fetchedTweexes.push({ id: doc.id, ...doc.data() });
-          });
-          setTweexes(fetchedTweexes);
-        });
-
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchData();
-  }, []); // Fetch data only once when component mounts
+  }, []);
+  // Fetch data only once when component mounts AOFIJAOFI
 
   // Adding info to the db when user makes a post
   const onHandleClick = async () => {
@@ -37,14 +36,17 @@ const WriteTweexContainer = () => {
         user: auth.currentUser.displayName,
         email: auth.currentUser.email,
         profilePicture: auth.currentUser.photoURL,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        createdAt: serverTimestamp(),
       });
 
-      tweexPost();
+      fetchData();
+      console.log(tweexPost);
     } catch (err) {
       console.log(err);
     }
   };
+
+  console.log("Tweexes:", tweexes); // Log the tweexes state to check if it's being updated
 
   return (
     <div>
