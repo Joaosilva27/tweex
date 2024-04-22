@@ -12,7 +12,6 @@ const Login = () => {
     try {
       const result = await signInWithPopup(auth, googleAuthProvider);
       setResult(result);
-      console.log(result);
       localStorage.setItem("token", result.user.accessToken);
       navigate("/");
     } catch (error) {

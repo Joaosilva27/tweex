@@ -26,32 +26,39 @@ const WriteTweexContainer = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  // Fetch data only once when component mounts AOFIJAOFI
+  // Fetch data only once when component mounts
 
   // Adding info to the db when user makes a post
   const onHandleClick = async () => {
     try {
-      const tweexPost = await addDoc(collection(db, "tweexes"), {
-        tweex: tweex,
-        user: auth.currentUser.displayName,
-        email: auth.currentUser.email,
-        profilePicture: auth.currentUser.photoURL,
-        createdAt: serverTimestamp(),
-      });
+      const currentUser = auth.currentUser;
 
-      fetchData();
-      console.log(tweexPost);
+      if (currentUser) {
+        const tweexPost = await addDoc(collection(db, "tweexes"), {
+          tweex: tweex,
+          user: currentUser.displayName,
+          email: currentUser.email,
+          profilePicture: currentUser.photoURL,
+          createdAt: serverTimestamp(),
+        });
+
+        fetchData();
+      } else {
+        // Handle the case where currentUser is null
+        console.log("User is not logged in.");
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  console.log("Tweexes:", tweexes); // Log the tweexes state to check if it's being updated
-
   return (
     <div>
       <div className='flex justify-center items-center'>
-        <img className='w-8 h-8 rounded-full' src={auth.currentUser.photoURL} alt='User' />
+        {auth.currentUser &&
+          auth.currentUser.photoURL && ( // Conditional rendering to check if currentUser exists and has photoURL
+            <img className='w-8 h-8 rounded-full' src={auth.currentUser.photoURL} alt='User' />
+          )}
         <input
           className=' w-full ml-3 appearance-none bg-transparent border-none focus:outline-none placeholder-white'
           placeholder='いまどうしてる ?'
