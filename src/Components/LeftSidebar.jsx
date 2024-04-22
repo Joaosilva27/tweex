@@ -14,7 +14,7 @@ export default function LeftSidebar() {
           <img src={TweexIcon} className='h-10 w-12' />
         </div>
         <LeftSidebarCard icon={HomeIcon} text='ホーム' />
-        <LeftSidebarCard icon={ForYouIcon} text='おすすあ' />
+        <LeftSidebarCard icon={ForYouIcon} text='おすすめ' />
         <LeftSidebarCard icon={BellIcon} text='通知' />
         <LeftSidebarCard icon={BookmarkIcon} text='ブックマーク' />
         <LeftSidebarCard icon={ProfileIcon} text='プロフィール' />

@@ -1,5 +1,6 @@
 import LeftSidebar from "../Components/LeftSidebar";
 import MainContainer from "../Components/MainContainer";
+import RightSidebar from "../Components/RightSidebar";
 
 const Home = () => {
   return (
@@ -11,7 +12,9 @@ const Home = () => {
         <MainContainer />
       </div>
 
-      <div className='w-2/5'>aoiejfoij</div>
+      <div className='w-2/5'>
+        <RightSidebar />
+      </div>
     </div>
   );
 };
