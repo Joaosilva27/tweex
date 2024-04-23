@@ -78,7 +78,7 @@ const WriteTweexContainer = () => {
           {tweexes.map(tweex => (
             <div className='flex mb-6' key={tweex.id}>
               <div>
-                <img className='w-8 rounded-full' src={tweex.profilePicture} alt='Profile' />
+                <img className='w-10 rounded-full' src={tweex.profilePicture} alt='Profile' />
               </div>
               <div className='ml-2'>
                 <span>{tweex.user}</span>
