@@ -1,28 +1,32 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const RightSidebar = () => {
   const [randomUsers, setRandomUsers] = useState([]);
-  const [trendingWorlwideData, setTrendingWorldwideData] = useState([]);
+  const [trendingWorldwideData, setTrendingWorldwideData] = useState([]);
 
   useEffect(() => {
     const fetchWorlwideTrends = async () => {
       const options = {
         method: "GET",
-        url: "https://news67.p.rapidapi.com/v2/trending",
-        params: { languages: "en" },
+        url: "https://news-api14.p.rapidapi.com/top-headlines",
+        params: {
+          country: "us",
+          language: "en",
+          pageSize: "10",
+          category: "sports",
+        },
         headers: {
           "X-RapidAPI-Key": "2755f3ef1bmshf5d9aff13eab94bp15ffa0jsn01f5d0127790",
-          "X-RapidAPI-Host": "news67.p.rapidapi.com",
+          "X-RapidAPI-Host": "news-api14.p.rapidapi.com",
         },
       };
 
       try {
         const response = await axios.request(options);
-        const trendingWorldwideData = response;
-        setTrendingWorldwideData(trendingWorldwideData);
-
-        // console.log(response.data);
+        console.log(response.data);
+        setTrendingWorldwideData(response.data.articles);
       } catch (error) {
         console.error(error);
       }
@@ -34,12 +38,12 @@ const RightSidebar = () => {
   useEffect(() => {
     const fetchRandomUsers = async () => {
       try {
-        const response1 = await axios.get("https://randomuser.me/api/");
-        const response2 = await axios.get("https://randomuser.me/api/");
-        const response3 = await axios.get("https://randomuser.me/api/");
-
-        const randomUsersData = [response1.data.results[0], response2.data.results[0], response3.data.results[0]];
-
+        const responses = await Promise.all([
+          axios.get("https://randomuser.me/api/"),
+          axios.get("https://randomuser.me/api/"),
+          axios.get("https://randomuser.me/api/"),
+        ]);
+        const randomUsersData = responses.map(response => response.data.results[0]);
         setRandomUsers(randomUsersData);
       } catch (err) {
         console.log(err);
@@ -61,10 +65,12 @@ const RightSidebar = () => {
     );
   };
 
-  const TrendingWorldWideCard = ({ category, title }) => {
+  const TrendingWorldWideCard = ({ title, url }) => {
     return (
-      <div>
-        <span className='text-lg font-bold'>{title}</span> - <span>{category}</span>
+      <div className='mb-6'>
+        <Link to={url} target='_blank' rel='noopener noreferrer'>
+          <span className='text-base font-bold'>{title}</span>
+        </Link>
       </div>
     );
   };
@@ -82,11 +88,10 @@ const RightSidebar = () => {
       ))}
       <div className='mt-12'>
         <h6 className='text-xl mb-6'>世界のトレンド</h6>
-        {trendingWorlwideData.map((data, index) => (
-          <TrendingWorldWideCard key={index} category='category' title='title' />
-        ))}
       </div>
-      <TrendingWorldWideCard category='category' title='title' />
+      {trendingWorldwideData.slice(0, 5).map((data, index) => (
+        <TrendingWorldWideCard key={index} title={data.title} url={data.url} />
+      ))}
     </div>
   );
 };
