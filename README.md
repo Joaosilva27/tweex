@@ -10,7 +10,8 @@ API used to display recommended people to follow (random user data): https://ran
 
 # Desktop
 
-<img width="1440" alt="Screenshot 2024-04-26 at 22 31 19" src="https://github.com/Joaosilva27/tweex/assets/94570140/6e35f1f5-f32c-44f9-bdd2-45967897b887">
+<img width="1440" alt="Screenshot 2024-04-26 at 23 43 07" src="https://github.com/Joaosilva27/tweex/assets/94570140/8c99265d-2fdb-44ee-994b-cb9c4e0d37c7">
+
 
 
 
