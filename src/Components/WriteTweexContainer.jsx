@@ -42,6 +42,7 @@ const WriteTweexContainer = () => {
           createdAt: serverTimestamp(),
         });
 
+        console.log("clicked");
         fetchData();
       } else {
         // Handle the case where currentUser is null
@@ -74,7 +75,7 @@ const WriteTweexContainer = () => {
         </button>
       </div>
       <div className='flex flex-col mt-10'>
-        <div>
+        <div className='flex flex-col-reverse'>
           {tweexes.map(tweex => (
             <div className='flex mb-6' key={tweex.id}>
               <div>
@@ -82,7 +83,7 @@ const WriteTweexContainer = () => {
               </div>
               <div className='ml-2'>
                 <span>{tweex.user}</span>
-                <span className='ml-2 text-sm'>@{tweex.email}</span>
+                <span className='ml-2 text-sm text-gray-400'>@{tweex.email}</span>
                 <p>{tweex.tweex}</p>
               </div>
             </div>

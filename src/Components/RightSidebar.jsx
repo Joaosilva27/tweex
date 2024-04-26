@@ -59,7 +59,7 @@ const RightSidebar = () => {
         <img className='w-10 h-10 rounded-full' src={profilePicture} alt='Profile' />
         <div className='flex flex-col ml-2'>
           <span>{name}</span>
-          <span>{email}</span>
+          <span className='text-gray-400'>{email}</span>
         </div>
       </div>
     );
