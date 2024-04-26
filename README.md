@@ -2,6 +2,8 @@
 
 Twitter clone built using React JS, Firebase and Tailwind.
 
+Visit it here: https://tweex-ec9cd.web.app/
+
 API used to display trending topics: https://rapidapi.com/MatcherLabs/api/news-api14
 
 API used to display recommended people to follow (random user data): https://randomuser.me/
