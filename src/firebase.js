@@ -5,7 +5,7 @@ import firebase from "firebase/compat/app";
 import "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCyKJKeToQdLVE4Hu6KZG4ocbEO567-twk",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "tweex-ec9cd.firebaseapp.com",
   projectId: "tweex-ec9cd",
   storageBucket: "tweex-ec9cd.appspot.com",
